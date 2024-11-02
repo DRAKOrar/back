@@ -26,17 +26,17 @@ class studentController extends Controller
             'status' => 200
         ];
  
-        return response()->json($students,200);
+        return response()->json($data,200);
         
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email'=> 'required|email',
-            'phone'=>'required',
-            'language' => 'required'
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:student',
+            'phone' => 'required|digits:10',
+            'language' => 'required|in:English,Spanish,French'
         ]);
 
         if($validator->fails() ){
