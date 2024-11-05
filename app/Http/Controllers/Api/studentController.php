@@ -33,10 +33,10 @@ class studentController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
+            'name' => 'required|max:10',
             'email' => 'required|email|unique:student',
             'phone' => 'required|digits:10',
-            'language' => 'required|in:English,Spanish,French'
+            'language' => 'in:master,player'
         ]);
 
         if($validator->fails() ){
