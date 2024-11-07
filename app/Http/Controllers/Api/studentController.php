@@ -188,4 +188,36 @@ class studentController extends Controller
             'status' => 200
         ], 200);
     }
+
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'phone' => 'required|digits:10',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Error en la validación de los datos',
+                'errors' => $validator->errors(),
+                'status' => 400
+            ], 400);
+        }
+
+        $student = Student::where('email', $request->email)
+            ->where('phone', $request->phone)
+            ->first();
+
+        if (!$student) {
+            return response()->json([
+                'message' => 'Credenciales incorrectas',
+                'status' => 401
+            ], 401);
+        }
+
+        return response()->json([
+            'student' => $student,
+            'status' => 200
+        ], 200);
+    }
 }
