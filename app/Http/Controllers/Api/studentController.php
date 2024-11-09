@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class studentController extends Controller
 {
@@ -35,7 +36,8 @@ class studentController extends Controller
             'name' => 'required|max:10',
             'email' => 'required|email|unique:student',
             'phone' => 'required|digits:10',
-            'language' => 'in:master,player'
+            'language' => 'in:master,player',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         if ($validator->fails()) {
@@ -219,5 +221,32 @@ class studentController extends Controller
             'student' => $student,
             'status' => 200
         ], 200);
+    }
+
+    public function uploadProfilePicture(Request $request, $id)
+    {
+        $request->validate([
+            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Limita el tamaño y tipo de imagen
+        ]);
+
+        $student = Student::find($id);
+        if (!$student) {
+            return response()->json(['message' => 'Estudiante no encontrado'], 404);
+        }
+
+        // Manejo de la imagen
+        if ($request->hasFile('profile_picture')) {
+            // Eliminar la imagen anterior si existe
+            if ($student->profile_picture) {
+                Storage::delete($student->profile_picture);
+            }
+
+            // Guardar la nueva imagen
+            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $student->profile_picture = $path;
+            $student->save();
+        }
+
+        return response()->json(['message' => 'Imagen de perfil actualizada', 'student' => $student], 200);
     }
 }

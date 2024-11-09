@@ -19,5 +19,4 @@ Route::patch('/students/{id}/assign-sala', [StudentController::class, 'assignSal
 
 Route::post('/students/login', [StudentController::class, 'login']);
 
-
-
+Route::post('/students/{id}/profile-picture', [StudentController::class, 'uploadProfilePicture']);
