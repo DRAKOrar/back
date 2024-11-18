@@ -26,3 +26,8 @@ Route::post('/students/verify-account', [StudentController::class, 'verifyAccoun
 
 Route::patch('/students/{id}/update-password', [StudentController::class, 'updatePassword']);
 
+
+use App\Http\Controllers\Api\HabilidadesController;
+
+Route::post('/students/{id}/habilidades', [HabilidadesController::class, 'store'])->name('habilidades.store');
+Route::get('/students/{id}/habilidades', [HabilidadesController::class, 'show'])->name('habilidades.show');

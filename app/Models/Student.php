@@ -12,7 +12,17 @@ class Student extends Model
     protected $table = 'student';
 
     protected $fillable = [
-        'name', 'email', 'phone', 'language', 'salaId', 'profile_picture'
+        'name',
+        'email',
+        'phone',
+        'language',
+        'salaId',
+        'profile_picture'
     ];
-    
+
+    // Relación uno a uno con Habilidad
+    public function habilidad()
+    {
+        return $this->hasOne(Habilidad::class, 'student_id');
+    }
 }
