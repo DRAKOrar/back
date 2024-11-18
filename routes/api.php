@@ -20,3 +20,9 @@ Route::patch('/students/{id}/assign-sala', [StudentController::class, 'assignSal
 Route::post('/students/login', [StudentController::class, 'login']);
 
 Route::post('/students/{id}/profile-picture', [StudentController::class, 'uploadProfilePicture']);
+
+Route::post('/students/verify-account', [StudentController::class, 'verifyAccount']);
+
+
+Route::patch('/students/{id}/update-password', [StudentController::class, 'updatePassword']);
+

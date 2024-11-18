@@ -190,7 +190,6 @@ class studentController extends Controller
             'status' => 200
         ], 200);
     }
-
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -248,5 +247,70 @@ class studentController extends Controller
         }
 
         return response()->json(['message' => 'Imagen de perfil actualizada', 'student' => $student], 200);
+    }
+
+    public function verifyAccount(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'email_or_phone' => 'required'
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'message' => 'Error en la validación',
+            'errors' => $validator->errors(),
+            'status' => 400
+        ], 400);
+    }
+
+    // Buscar por email o phone
+    $student = Student::where('email', $request->email_or_phone)
+        ->orWhere('phone', $request->email_or_phone)
+        ->first();
+
+    if (!$student) {
+        return response()->json([
+            'message' => 'Cuenta no encontrada',
+            'status' => 404
+        ], 404);
+    }
+
+    return response()->json([
+        'message' => 'Cuenta verificada con éxito',
+        'student' => $student, // Devuelve los datos básicos
+        'status' => 200
+    ], 200);
+}
+
+
+    public function updatePassword(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'new_password' => 'required|min:8|confirmed'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Error en la validación',
+                'errors' => $validator->errors(),
+                'status' => 400
+            ], 400);
+        }
+
+        $student = Student::find($id);
+        if (!$student) {
+            return response()->json([
+                'message' => 'Cuenta no encontrada',
+                'status' => 404
+            ], 404);
+        }
+
+        $student->phone = $request->new_password;
+        $student->save();
+
+        return response()->json([
+            'message' => 'Contraseña actualizada con éxito',
+            'status' => 200
+        ], 200);
     }
 }
